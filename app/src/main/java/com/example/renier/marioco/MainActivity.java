@@ -93,7 +93,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 
     public void geklikt(View view)
     {
-       
+
         Intent i = new Intent(this, ServiceScherm.class);
         startActivity(i);
         finish();

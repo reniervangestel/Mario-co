@@ -8,36 +8,28 @@ import android.view.MenuItem;
 import android.view.View;
 
 
-public class ServiceScherm extends Activity {
+public class AanvraagScherm extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_service_scherm);
+        setContentView(R.layout.activity_aanvraag_scherm);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_service_scherm, menu);
+        getMenuInflater().inflate(R.menu.menu_aanvraag_scherm, menu);
         return true;
     }
 
-    public void Volgende (View view)
-    {
-        Intent i = new Intent(this, AanvraagScherm.class);
-        startActivity(i);
-        finish();
-    }
-
-    public void Terug (View view)
+    public void Annuleren(View view)
     {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
