@@ -1,6 +1,7 @@
 package com.example.renier.marioco;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,10 +21,10 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 
 
     Spinner spinner;
-    ListView service;
     ArrayAdapter<String> adapter;
     List<String> list;
     TextView serviceinfo;
+    String Geselecteerd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,14 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
 
+    }
+
+    public void geklikt(View view)
+    {
+       
+        Intent i = new Intent(this, ServiceScherm.class);
+        startActivity(i);
+        finish();
     }
 
     @Override
