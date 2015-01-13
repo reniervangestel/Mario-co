@@ -15,11 +15,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.example.renier.marioco.Preferences;
 
 public class MainActivity extends Activity implements OnItemSelectedListener {
 
-
+    String Gekozen;
     Spinner spinner;
     ArrayAdapter<String> adapter;
     List<String> list;
@@ -30,6 +30,13 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(Preferences.getInstance(this) == null)
+            System.out.println("no instance of preferences");
+        String[] pref = Preferences.getInstance(this).getMainActivityPreferences();
+        if(pref[0] != null)
+            spinner.setSelection(Integer.parseInt(pref[0]));
+
 
         list = new ArrayList<String>();
         list.add("Riolering");
@@ -51,6 +58,10 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
     }
 
 
+
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -65,20 +76,26 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
         switch(position){
             case 0: //Riolering
                 System.out.println("Riolering");
-
+                Gekozen = spinner.getSelectedItem().toString();
                 serviceinfo.setText("Uw toiletproblemen in mum van tijd verholpen!");
+
+
+
+
 
                 break;
             case 1: //Dak Lekkages
                 System.out.println("Dak Lekkages");
-
+                Gekozen = spinner.getSelectedItem().toString();
                 serviceinfo.setText("Valt alles in het water? Wij helpen u uit de brand!");
+
 
                 break;
             case 2: //Prinses In Nood
                 System.out.println("Prinses In Nood");
-
+                Gekozen = spinner.getSelectedItem().toString();
                 serviceinfo.setText("Wij vinden het juiste kasteel voor u!");
+
                 break;
         }
 
@@ -94,7 +111,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
     public void geklikt(View view)
     {
 
-        Intent i = new Intent(this, ServiceScherm.class);
+        Intent i = new Intent(MainActivity.this, ServiceScherm.class);
+        i.putExtra("Gekozen",Gekozen.toString());
         startActivity(i);
         finish();
     }

@@ -10,5 +10,6 @@
     <string name="title_activity_splashscreen">Splashscreen</string>
     <string name="title_activity_service_scherm">ServiceScherm</string>
     <string name="title_activity_aanvraag_scherm">AanvraagScherm</string>
+    <string name="title_activity_preferences">Preferences</string>
 
 </resources>

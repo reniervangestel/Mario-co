@@ -6,14 +6,29 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 
 public class ServiceScherm extends Activity {
 
+
+    String Gekozen;
+    TextView titel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_scherm);
+
+        Intent hoofdscherm = getIntent();
+        Gekozen = hoofdscherm.getStringExtra("Gekozen");
+
+
+        TextView titel = (TextView)findViewById(R.id.text);
+        this.titel = titel;
+        titel.setText(Gekozen);
+
+
+
     }
 
 
@@ -22,6 +37,7 @@ public class ServiceScherm extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_service_scherm, menu);
         return true;
+
     }
 
     public void Volgende (View view)
