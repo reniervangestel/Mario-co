@@ -25,7 +25,7 @@ public class AanvraagScherm extends Activity {
     String servicenaam;
     String ip ="145.101.90.12";
     int port = 4444;
-    Button button4;
+    String serverIp;
 
     private static String naam;
     private static String adres;
@@ -45,6 +45,7 @@ public class AanvraagScherm extends Activity {
 
         Intent hoofdscher1= getIntent();
         servicenaam = hoofdscher1.getStringExtra("servicenaam");
+        serverIp = hoofdscher1.getStringExtra("serverIp");
         System.out.println(servicenaam + "aanvraag scherm");
 
 
@@ -116,7 +117,7 @@ public class AanvraagScherm extends Activity {
         try {
             try {
                 // Dit IP adres moet IP adres van server zijn.
-                response = new ServerCommunicator("145.101.90.12",
+                response = new ServerCommunicator(serverIp,
                         port, bestelling.toString()).execute().get();
             } catch (ExecutionException e) {
                 e.printStackTrace();

@@ -12,7 +12,7 @@ import android.widget.TextView;
 public class ServiceScherm extends Activity {
 
     String servicenaam;
-    String Gekozen;
+    String serverIp;
     TextView titel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +21,7 @@ public class ServiceScherm extends Activity {
 
         Intent hoofdscherm = getIntent();
         servicenaam = hoofdscherm.getStringExtra("naam");
+        serverIp = hoofdscherm.getStringExtra("ip");
 
 
         TextView titel = (TextView)findViewById(R.id.text);
@@ -44,6 +45,7 @@ public class ServiceScherm extends Activity {
     {
         Intent i = new Intent(this, AanvraagScherm.class);
         i.putExtra("servicenaam", (String)servicenaam);
+        i.putExtra("serverIp", (String)serverIp);
         startActivity(i);
         finish();
     }

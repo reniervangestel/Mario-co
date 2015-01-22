@@ -30,9 +30,9 @@ import org.json.JSONObject;
 
 public class MainActivity extends Activity implements OnItemSelectedListener {
 
-    String Gekozen;
+
     Spinner spinner;
-    ArrayAdapter<String> adapter;
+
     List<String> list;
     TextView serviceinfo;
     public static String serverIp = "145.101.90.12";
@@ -53,11 +53,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
         TextView serviceinfo = (TextView)findViewById(R.id.Veld1);
 
         this.serviceinfo = serviceinfo;
-
-
-
-
-
 
         serviceLijst = new ArrayList<String>();
         JSONObject jsonObject = new JSONObject();
@@ -175,18 +170,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
                     }
                 });
 
-        //Hier koppel ik de button aan de pagina serviceinfo
-
-
-
         }
-
-
-
-
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -223,6 +207,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 
         Intent i = new Intent(MainActivity.this, ServiceScherm.class);
         i.putExtra("naam",servicenaam.toString());
+        i.putExtra("ip",serverIp);
         startActivity(i);
         finish();
     }
