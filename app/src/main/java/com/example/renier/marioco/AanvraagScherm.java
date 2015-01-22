@@ -9,16 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.example.renier.marioco.Preferences;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.HTTP;
-import com.example.renier.marioco.ServerCommunicator;
 
 
 public class AanvraagScherm extends Activity {
@@ -28,6 +23,9 @@ public class AanvraagScherm extends Activity {
     EditText Telefoon;
     EditText email;
     private ServerCommunicator serverCommunicator;
+    String Gekozen;
+    String ip ="145.101.90.12";
+    int port = 4444;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +36,12 @@ public class AanvraagScherm extends Activity {
         EditText Straat = (EditText) findViewById(R.id.editText2);
         EditText Telefoon = (EditText) findViewById(R.id.editText3);
         EditText email = (EditText) findViewById(R.id.editText4);
+
+
+        Intent hoofdscherm = getIntent();
+        Gekozen = hoofdscherm.getStringExtra("Gekozen");
+        System.out.println(Gekozen);
+
 
         this.naam = naam;
         this.Straat = Straat;
@@ -83,9 +87,30 @@ public class AanvraagScherm extends Activity {
         startActivity(i);
         finish();
 
-        String message = "er is een bestelling geplaatst door:  " + naam.getText().toString() + "   Het adres is : " + Straat.getText().toString();
+        JSONArray aanvraaglijst = new JSONArray();
+        JSONObject aanvraag = new JSONObject();
+        try {
+            aanvraaglijst.put(new JSONObject().put("servicenaam","test"));
+                    //Gekozen.toString()));
 
-        this.serverCommunicator = new ServerCommunicator( this, "145.101.89.247",4444,message  );
+            JSONObject obj2 = new JSONObject();
+            obj2.put("kopernaam", naam.getText().toString());
+            obj2.put("koperadres", Straat.getText().toString());
+            obj2.put("kopertelnr", Telefoon.getText().toString());
+            obj2.put("koperemail", email.getText().toString());
+
+            aanvraaglijst.put(obj2);
+
+            aanvraag.put("aanvraag", aanvraaglijst);
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        this.serverCommunicator = new ServerCommunicator(this,
+                ip, port, aanvraag);
 
 
 

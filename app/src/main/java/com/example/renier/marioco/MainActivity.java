@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import com.example.renier.marioco.Preferences;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends Activity implements OnItemSelectedListener {
 
     String Gekozen;
@@ -30,6 +34,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         if(Preferences.getInstance(this) == null)
             System.out.println("no instance of preferences");
