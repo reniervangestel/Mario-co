@@ -2,19 +2,26 @@ package com.example.renier.marioco;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import com.example.renier.marioco.Preferences;
 
 import org.json.JSONArray;
@@ -28,39 +35,153 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
     ArrayAdapter<String> adapter;
     List<String> list;
     TextView serviceinfo;
-    String Geselecteerd;
+    public static String serverIp = "145.101.90.12";
+    public static int serverPort = 4444;
+    ArrayList<String> serviceLijst;
+    public static ArrayList<JSONObject> beknopteInformatielijst;
+    public String informatiebeknopt = null;
+    public static String servicenaam;
+    Button volgende;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        if(Preferences.getInstance(this) == null)
-            System.out.println("no instance of preferences");
-        String[] pref = Preferences.getInstance(this).getMainActivityPreferences();
-        if(pref[0] != null)
-            spinner.setSelection(Integer.parseInt(pref[0]));
-
-
-        list = new ArrayList<String>();
-        list.add("Riolering");
-        list.add("Dak Lekkage");
-        list.add("Prinses In Nood");
-
-        Spinner spinner = (Spinner)findViewById(R.id.spinner);
-        this.spinner = spinner;
-
+        Button volgende = (Button)findViewById(R.id.button);
+        this.volgende = volgende;
         TextView serviceinfo = (TextView)findViewById(R.id.Veld1);
+
         this.serviceinfo = serviceinfo;
 
-        adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item, list);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
 
-        spinner.setOnItemSelectedListener(this);
 
-    }
+
+
+
+        serviceLijst = new ArrayList<String>();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("servicelijst", "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String response = null;
+        try {
+            try {
+                // Het ip adres die ik hieronder aanmaakt moet het ip adres zijn van de server waaruit die alles moet ophalen
+                response = new ServerCommunicator(serverIp,
+                        serverPort, jsonObject.toString()).execute().get();
+
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        }
+        if (response == null) {
+
+            Toast.makeText(this, "Verbinding met de server niet mogelijk.", Toast.LENGTH_LONG).show();
+        } else {
+            // Haal de null naam weg van de JSONArray (Voorkomt error)
+            String jsonFix = response.replace("null", "");
+
+            JSONArray JArray = null;
+            try {
+                JArray = new JSONArray(jsonFix);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JSONObject jObject = null;
+            String value = null;
+            serviceLijst = new ArrayList<String>();
+
+            for (int i = 0; i < JArray.length(); i++) {
+                try {
+                    jObject = JArray.getJSONObject(i);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    value = jObject.getString("naam");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                serviceLijst.add(value);
+
+            }
+            // haaalt de beknopte informatie op.
+            beknopteInformatielijst = new ArrayList<JSONObject>();
+            JSONObject beknoptjObject = new JSONObject();
+            try {
+                for (int i = 0; i < serviceLijst.size(); i++) {
+                    beknoptjObject.put("informatiebeknopt", serviceLijst.get(i));
+                    try {
+                        try {
+                            informatiebeknopt = new ServerCommunicator(serverIp,
+                                    serverPort, beknoptjObject.toString()).execute().get();
+
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    String infoFix = informatiebeknopt.replace("null", "");
+                    JSONObject fixedjObject = new JSONObject(infoFix);
+                    beknopteInformatielijst.add(fixedjObject);
+
+                    Log.i("informatiebeknopt", infoFix);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+        // Hieronder maak ik de spinner aan en geef ik aan waaaruit hij de informatie moet halen. Dit komt uit de server.
+        spinner = (Spinner)findViewById(R.id.spinner);
+
+        spinner
+                .setAdapter(new ArrayAdapter<String>(this,
+                        android.R.layout.simple_spinner_dropdown_item,
+                        serviceLijst));
+
+        spinner
+                .setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> arg0,
+                                               View arg1, int position, long arg3) {
+                        // TODO Auto-generated method stub
+                        // geeft aan waar de text moet komen in de homefragment. DIt komt te staan in de textview Textservice.
+                        TextView beknopteinfo = (TextView)findViewById(R.id.Veld1);
+
+                        try {
+                            beknopteinfo.setText(beknopteInformatielijst.get(position).getString("informatiebeknopt"));
+                            servicenaam = serviceLijst.get(position);
+
+                        } catch (Exception e) {
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> arg0) {
+                        // TODO Auto-generated method stub
+                    }
+                });
+
+        //Hier koppel ik de button aan de pagina serviceinfo
+
+
+
+        }
+
+
 
 
 
@@ -75,35 +196,19 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position,
-                               long id) {
+    public void onItemSelected(AdapterView<?> arg0,
+                               View arg1, int position, long arg3) {
+        // TODO Auto-generated method stub
+        // geeft aan waar de text moet komen in de homefragment. DIt komt te staan in de textview Textservice.
+        TextView beknopteinfo = (TextView)findViewById(R.id.Veld1);
 
-        switch(position){
-            case 0: //Riolering
-                System.out.println("Riolering");
-                Gekozen = spinner.getSelectedItem().toString();
-                serviceinfo.setText("Uw toiletproblemen in mum van tijd verholpen!");
+        try {
+            beknopteinfo.setText(beknopteInformatielijst.get(position).getString("informatiebeknopt"));
+            servicenaam = serviceLijst.get(position);
 
+        } catch (Exception e) {
 
-
-
-
-                break;
-            case 1: //Dak Lekkages
-                System.out.println("Dak Lekkages");
-                Gekozen = spinner.getSelectedItem().toString();
-                serviceinfo.setText("Valt alles in het water? Wij helpen u uit de brand!");
-
-
-                break;
-            case 2: //Prinses In Nood
-                System.out.println("Prinses In Nood");
-                Gekozen = spinner.getSelectedItem().toString();
-                serviceinfo.setText("Wij vinden het juiste kasteel voor u!");
-
-                break;
         }
-
 
     }
 
@@ -117,7 +222,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
     {
 
         Intent i = new Intent(MainActivity.this, ServiceScherm.class);
-        i.putExtra("Gekozen",Gekozen.toString());
+        i.putExtra("naam",servicenaam.toString());
         startActivity(i);
         finish();
     }

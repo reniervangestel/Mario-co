@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class ServiceScherm extends Activity {
 
-
+    String servicenaam;
     String Gekozen;
     TextView titel;
     @Override
@@ -20,12 +20,12 @@ public class ServiceScherm extends Activity {
         setContentView(R.layout.activity_service_scherm);
 
         Intent hoofdscherm = getIntent();
-        Gekozen = hoofdscherm.getStringExtra("Gekozen");
+        servicenaam = hoofdscherm.getStringExtra("naam");
 
 
         TextView titel = (TextView)findViewById(R.id.text);
         this.titel = titel;
-        titel.setText(Gekozen);
+        titel.setText(servicenaam);
 
 
 
@@ -43,6 +43,7 @@ public class ServiceScherm extends Activity {
     public void Volgende (View view)
     {
         Intent i = new Intent(this, AanvraagScherm.class);
+        i.putExtra("servicenaam", (String)servicenaam);
         startActivity(i);
         finish();
     }

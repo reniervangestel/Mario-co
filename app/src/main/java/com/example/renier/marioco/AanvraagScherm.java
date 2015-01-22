@@ -3,60 +3,53 @@ package com.example.renier.marioco;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
+import java.util.concurrent.ExecutionException;
 
 
 public class AanvraagScherm extends Activity {
 
-    EditText naam;
-    EditText Straat;
-    EditText Telefoon;
-    EditText email;
+
     private ServerCommunicator serverCommunicator;
-    String Gekozen;
+    String servicenaam;
     String ip ="145.101.90.12";
     int port = 4444;
+    Button button4;
+
+    private static String naam;
+    private static String adres;
+    private static String telefoon;
+    private static String email;
+
+    String responseFix;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aanvraag_scherm);
 
-        EditText naam = (EditText) findViewById(R.id.editText);
-        EditText Straat = (EditText) findViewById(R.id.editText2);
-        EditText Telefoon = (EditText) findViewById(R.id.editText3);
-        EditText email = (EditText) findViewById(R.id.editText4);
 
 
-        Intent hoofdscherm = getIntent();
-        Gekozen = hoofdscherm.getStringExtra("Gekozen");
-        System.out.println(Gekozen);
 
 
-        this.naam = naam;
-        this.Straat = Straat;
-        this.Telefoon = Telefoon;
-        this.email = email;
+        Intent hoofdscher1= getIntent();
+        servicenaam = hoofdscher1.getStringExtra("servicenaam");
+        System.out.println(servicenaam + "aanvraag scherm");
 
-        String[] prefs = Preferences.getInstance(this).getCustomerInfoPreferences();
-        if(prefs[0] != null)
-            this.naam.setText(prefs[0]);
-        if(prefs[1] != null)
-            this.Straat.setText(prefs[1]);
-        if(prefs[2] != null)
-            this.Telefoon.setText(prefs[2]);
-        if(prefs[3] != null)
-            this.email.setText(prefs[3]);
+
+
+
     }
 
 
@@ -76,42 +69,72 @@ public class AanvraagScherm extends Activity {
 
     public void Aanvragen(View view)
     {
-        Context context = getApplicationContext();
-        CharSequence text = "Succesvol aangevraagt!";
-        int duration = Toast.LENGTH_SHORT;
 
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
 
+
+        plaatsBestelling();
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
 
-        JSONArray aanvraaglijst = new JSONArray();
-        JSONObject aanvraag = new JSONObject();
+    }
+
+
+    private void plaatsBestelling() {
+        final EditText koperNaam = (EditText) findViewById(R.id.editText);
+        final EditText koperAdres = (EditText) findViewById(R.id.editText2);
+        final EditText koperTelefoon = (EditText) findViewById(R.id.editText3);
+        final EditText koperEmail = (EditText) findViewById(R.id.editText4);
+
+        naam = koperNaam.getText().toString();
+        adres = koperAdres.getText().toString();
+        telefoon = koperTelefoon.getText().toString();
+        email = koperEmail.getText().toString();
+
+        JSONObject bestelling = new JSONObject();
+        JSONObject service = new JSONObject();
+        JSONObject gegevens = new JSONObject();
+        JSONArray bestelArray = new JSONArray();
+
         try {
-            aanvraaglijst.put(new JSONObject().put("servicenaam","test"));
-                    //Gekozen.toString()));
+            service.put("servicenaam", servicenaam.toString());
+            gegevens.put("kopernaam", naam);
+            gegevens.put("koperadres", adres);
+            gegevens.put("kopertelnr", telefoon);
+            gegevens.put("koperemail", email);
 
-            JSONObject obj2 = new JSONObject();
-            obj2.put("kopernaam", naam.getText().toString());
-            obj2.put("koperadres", Straat.getText().toString());
-            obj2.put("kopertelnr", Telefoon.getText().toString());
-            obj2.put("koperemail", email.getText().toString());
+            bestelArray.put(service);
+            bestelArray.put(gegevens);
 
-            aanvraaglijst.put(obj2);
-
-            aanvraag.put("aanvraag", aanvraaglijst);
+            bestelling.put("aanvraag", bestelArray);
 
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+
         }
+        String response = null;
+
+        try {
+            try {
+                // Dit IP adres moet IP adres van server zijn.
+                response = new ServerCommunicator("145.101.90.12",
+                        port, bestelling.toString()).execute().get();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        }
+        if(response == null)
+        {
+            Toast.makeText(this, "Server is momenteel niet bereikbaar", Toast.LENGTH_LONG).show();
+        }
+        else{
+            responseFix = response.replace("null", "");
+
+            Toast.makeText(this, responseFix, Toast.LENGTH_LONG).show();
 
 
-        this.serverCommunicator = new ServerCommunicator(this,
-                ip, port, aanvraag);
-
+        }
 
 
 
