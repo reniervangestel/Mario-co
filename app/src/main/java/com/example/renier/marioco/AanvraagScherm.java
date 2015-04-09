@@ -75,6 +75,7 @@ public class AanvraagScherm extends Activity {
 
         plaatsBestelling();
         Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("ip", serverIp);
         startActivity(i);
         finish();
 
@@ -127,16 +128,19 @@ public class AanvraagScherm extends Activity {
         }
         if(response == null)
         {
-            Toast.makeText(this, "Server is momenteel niet bereikbaar", Toast.LENGTH_LONG).show();
+            Toast.makeText(AanvraagScherm.this,
+                    "Hartelijk dank voor uw bestelling!",
+                    Toast.LENGTH_LONG).show();
         }
         else{
             responseFix = response.replace("null", "");
 
-            Toast.makeText(this, responseFix, Toast.LENGTH_LONG).show();
+            Toast.makeText(AanvraagScherm.this,
+                    "Hartelijk dank voor uw bestelling!",
+                    Toast.LENGTH_LONG).show();
 
 
         }
-
 
 
 

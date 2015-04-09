@@ -9,7 +9,8 @@
         android:theme="@style/AppTheme" >
         <uses-permission
             android:name="android.permission.INTERNET"
-            android:maxSdkVersion="19" />
+            />
+        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
         <!-- Splash screen -->
         <activity
             android:name="com.example.renier.marioco.Splashscreen"

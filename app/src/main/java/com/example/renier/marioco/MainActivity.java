@@ -35,7 +35,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 
     List<String> list;
     TextView serviceinfo;
-    public String ip;
+
     public static String serverIp;
     public static int serverPort = 4444;
     ArrayList<String> serviceLijst;
@@ -79,7 +79,9 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
         }
         if (response == null) {
 
-            Toast.makeText(this, "Verbinding met de server niet mogelijk.", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this,
+                    "Verbinding met de server niet mogelijk.",
+                    Toast.LENGTH_LONG).show();
         } else {
             // Haal de null naam weg van de JSONArray (Voorkomt error)
             String jsonFix = response.replace("null", "");
@@ -211,6 +213,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
         Intent i = new Intent(MainActivity.this, ServiceScherm.class);
         i.putExtra("naam",servicenaam.toString());
         i.putExtra("ip",serverIp);
+
         startActivity(i);
         finish();
     }
