@@ -35,7 +35,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 
     List<String> list;
     TextView serviceinfo;
-    public static String serverIp = "145.101.90.12";
+    public String ip;
+    public static String serverIp;
     public static int serverPort = 4444;
     ArrayList<String> serviceLijst;
     public static ArrayList<JSONObject> beknopteInformatielijst;
@@ -47,6 +48,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent hoofdscherm = getIntent();
+        serverIp = hoofdscherm.getStringExtra("ip");
 
         Button volgende = (Button)findViewById(R.id.button);
         this.volgende = volgende;
@@ -57,7 +60,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
         serviceLijst = new ArrayList<String>();
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("servicelijst", "");
+            jsonObject.put("slotenlijst", "");
         } catch (JSONException e) {
             e.printStackTrace();
         }

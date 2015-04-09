@@ -98,7 +98,7 @@ public class AanvraagScherm extends Activity {
         JSONArray bestelArray = new JSONArray();
 
         try {
-            service.put("servicenaam", servicenaam.toString());
+            service.put("slotnaam", servicenaam.toString());
             gegevens.put("kopernaam", naam);
             gegevens.put("koperadres", adres);
             gegevens.put("kopertelnr", telefoon);

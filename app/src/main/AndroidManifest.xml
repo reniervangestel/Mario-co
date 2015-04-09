@@ -7,9 +7,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-
-
-        <uses-permission android:maxSdkVersion="19" android:name="android.permission.INTERNET"/>
+        <uses-permission
+            android:name="android.permission.INTERNET"
+            android:maxSdkVersion="19" />
         <!-- Splash screen -->
         <activity
             android:name="com.example.renier.marioco.Splashscreen"
@@ -39,6 +39,10 @@
         <activity
             android:name="com.example.renier.marioco.Preferences"
             android:label="@string/title_activity_preferences" >
+        </activity>
+        <activity
+            android:name="com.example.renier.marioco.IpAdres"
+            android:label="@string/title_activity_ip_adres" >
         </activity>
     </application>
 

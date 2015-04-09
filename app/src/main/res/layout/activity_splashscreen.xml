@@ -16,7 +16,7 @@
         android:layout_marginBottom="18dp"
         android:fontFamily="Lucida"
         android:text="Welkom"
-        android:textColor="#ffef1604"
+        android:textColor="#ff265bff"
         android:textSize="70sp"
         android:textStyle="italic"
         android:typeface="serif" />
@@ -37,10 +37,10 @@
         android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true"
         android:fontFamily="Lucida Handwriting"
-        android:text="Mario &amp; Co"
-        android:textColor="#ffef1604"
+        android:text="De Sleutelaar"
         android:textSize="34sp"
-        android:textStyle="italic" />
+        android:textStyle="italic"
+        android:textColor="#ff265bff" />
 
     <ProgressBar
         android:id="@+id/progressBar1"
@@ -48,7 +48,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="18dp" />
+        android:layout_marginBottom="18dp"
+        android:indeterminate="false" />
 
 
 </RelativeLayout>
